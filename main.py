@@ -5,8 +5,9 @@ import google.generativeai as genai
 from dotenv import load_dotenv
 import os
 
-# Load environment variables
-load_dotenv()
+# Load from .env only if running locally
+if os.getenv("RENDER") is None:
+    load_dotenv()
 
 # Configure Gemini API
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
