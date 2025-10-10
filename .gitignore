@@ -1,0 +1,45 @@
+# Ignore Python cache and compiled files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtual environments
+env/
+venv/
+.venv/
+
+# Model files (very important)
+*.pkl
+*.joblib
+*.h5
+*.pt
+*.pth
+*.onnx
+
+# Jupyter notebooks checkpoints
+.ipynb_checkpoints
+
+# IDE/editor settings
+.vscode/
+.idea/
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs and temporary data
+*.log
+*.tmp
+*.bak
+
+# Byte-compiled C extensions
+build/
+dist/
+
+# Docker-related
+*.tar
+*.log
+.dockerignore
