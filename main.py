@@ -2,11 +2,11 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import joblib
 import google.generativeai as genai
-from dotenv import load_dotenv
 import os
 
-# Load from .env only if running locally
-if os.getenv("RENDER") is None:
+# Only load dotenv if not running in Render
+if not os.getenv("RENDER"):
+    from dotenv import load_dotenv
     load_dotenv()
 
 # Configure Gemini API
