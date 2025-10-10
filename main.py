@@ -1,18 +1,29 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import joblib
+import google.generativeai as genai
+from dotenv import load_dotenv
+import os
 
-# Load model + vectorizer
+# Load environment variables
+load_dotenv()
+
+# Configure Gemini API
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+
+for m in genai.list_models():
+    print(m.name)
+
+# Load sentiment model and vectorizer
 model = joblib.load("sentiment_model.pkl")
 vectorizer = joblib.load("vectorizer.pkl")
 
 app = FastAPI(
     title="Sentiment Analysis API",
-    description="Predicts sentiment (positive, neutral, negative) from text input",
-    version="1.0"
+    description="Predicts sentiment (positive, neutral, negative) from text input and generates AI reflections.",
+    version="1.1"
 )
 
-# Define request schema
 class TextInput(BaseModel):
     text: str
 
@@ -24,5 +35,18 @@ def read_root():
 def predict_sentiment(input: TextInput):
     text = input.text
     X = vectorizer.transform([text])
-    pred = model.predict(X)[0]
-    return {"sentiment": pred}
+    sentiment = model.predict(X)[0]
+
+    # Generate Gemini reflection
+    try:
+        gen_model = genai.GenerativeModel("gemini-2.0-flash")
+        prompt = f"The detected sentiment is '{sentiment}'. Write a short reflective thought in a natural, empathetic tone about this text: {text}"
+        response = gen_model.generate_content(prompt)
+        thought = response.text
+    except Exception as e:
+        thought = f"Could not generate reflection: {str(e)}"
+
+    return {
+        "sentiment": sentiment,
+        "thought": thought
+    }
