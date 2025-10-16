@@ -41,7 +41,17 @@ def predict_sentiment(input: TextInput):
     # Generate Gemini reflection
     try:
         gen_model = genai.GenerativeModel("gemini-2.0-flash")
-        prompt = f"The detected sentiment is '{sentiment}'. Write a short reflective thought in a natural, empathetic tone about this text: {text}"
+        prompt = f"""Based on the text: "{text}"
+        
+The sentiment analysis detected: {sentiment}
+
+Please provide a brief, empathetic response (2-3 sentences) that:
+- Acknowledges the person's feelings without being overly clinical
+- Offers gentle validation or encouragement as appropriate
+- Uses a warm, human tone as if speaking to a friend
+- Avoids mentioning the sentiment analysis directly
+
+Focus on being genuinely helpful and supportive. And if they are doing well, make sure to celebrate that! Also make sure to speak as if you're talking directly to the person like a friend."""
         response = gen_model.generate_content(prompt)
         thought = response.text
     except Exception as e:
