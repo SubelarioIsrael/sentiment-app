@@ -9,7 +9,7 @@ import os
 #     from dotenv import load_dotenv
 #     load_dotenv()
 
-# Configure Gemini API
+# Configure Gemi5ni API
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 for m in genai.list_models():
@@ -35,6 +35,10 @@ class EnhancedTextInput(BaseModel):
 @app.get("/")
 def read_root():
     return {"message": "Sentiment Analysis API is running!"}
+
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
 
 @app.post("/predict")
 def predict_sentiment(input: TextInput):
