@@ -3,11 +3,9 @@ from pydantic import BaseModel
 import joblib
 import google.generativeai as genai
 import os
+from dotenv import load_dotenv
 
-# # Only load dotenv if not running in Render
-# if not os.getenv("RENDER"):
-#     from dotenv import load_dotenv
-#     load_dotenv()
+load_dotenv()  # loads .env locally; no-op when env vars are already set (e.g. Render)
 
 # Configure Gemini API
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
@@ -197,3 +195,5 @@ def predict_sentiment_enhanced(input: EnhancedTextInput):
     else:
         # Fall back to original method
         return predict_sentiment(TextInput(text=text))
+
+print(os.getenv("GEMINI_API_KEY")[:12])

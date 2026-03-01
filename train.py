@@ -10,7 +10,12 @@ from sklearn.utils.class_weight import compute_class_weight
 import numpy as np
 
 # ========== 1. LOAD DATA ==========
-df = pd.read_csv("train.csv", encoding="ISO-8859-1")
+import os
+_base = os.path.dirname(os.path.abspath(__file__))
+_csv = os.path.join(_base, "train.csv")
+if not os.path.exists(_csv):
+    _csv = os.path.join(_base, "..", "train_model", "train.csv")
+df = pd.read_csv(_csv, encoding="ISO-8859-1")
 
 # Use only the necessary columns
 df = df[['text', 'sentiment']].dropna()
