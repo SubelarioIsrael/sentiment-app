@@ -9,11 +9,8 @@ import os
 #     from dotenv import load_dotenv
 #     load_dotenv()
 
-# Configure Gemi5ni API
+# Configure Gemini API
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-
-for m in genai.list_models():
-    print(m.name)
 
 # Load sentiment model and vectorizer
 model = joblib.load("sentiment_model.pkl")
