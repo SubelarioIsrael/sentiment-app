@@ -1,14 +1,14 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import joblib
-import google.generativeai as genai
+from google import genai
 import os
 from dotenv import load_dotenv
 
 load_dotenv(override=True)  # .env values override any existing system env vars
 
 # Configure Gemini API
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 # Load sentiment model and vectorizer
 model = joblib.load("sentiment_model.pkl")
@@ -43,7 +43,6 @@ def predict_sentiment(input: TextInput):
 
     # Generate Gemini reflection
     try:
-        gen_model = genai.GenerativeModel("gemini-2.0-flash")
         prompt = f"""Based on the text: "{text}"
         
 The sentiment analysis detected: {sentiment}
@@ -55,7 +54,7 @@ Please provide a brief, empathetic response (2-3 sentences) that:
 - Avoids mentioning the sentiment analysis directly
 
 Focus on being genuinely helpful and supportive. And if they are doing well, make sure to celebrate that! Also make sure to speak as if you're talking directly to the person like a friend."""
-        response = gen_model.generate_content(prompt)
+        response = client.models.generate_content(model="gemini-2.0-flash", contents=prompt)
         thought = response.text
     except Exception as e:
         thought = f"Could not generate reflection: {str(e)}"
@@ -68,7 +67,6 @@ Focus on being genuinely helpful and supportive. And if they are doing well, mak
 def get_ai_sentiment_analysis(text: str):
     """Get sentiment analysis from Gemini AI that can handle figurative language"""
     try:
-        gen_model = genai.GenerativeModel("gemini-2.0-flash")
         prompt = f"""Analyze the sentiment of this text, paying special attention to figurative language, sarcasm, irony, and context: "{text}"
 
 Please respond with:
@@ -81,7 +79,7 @@ Sentiment: [sentiment]
 Confidence: [number]
 Reasoning: [explanation]"""
         
-        response = gen_model.generate_content(prompt)
+        response = client.models.generate_content(model="gemini-2.0-flash", contents=prompt)
         ai_analysis = response.text
         
         # Parse AI response
@@ -108,7 +106,6 @@ Reasoning: [explanation]"""
 def get_ai_sentiment_and_reflection(text: str):
     """Get both sentiment analysis and empathetic reflection in one prompt"""
     try:
-        gen_model = genai.GenerativeModel("gemini-2.0-flash")
         prompt = f"""Analyze this text for sentiment, paying special attention to figurative language, sarcasm, irony, and context: "{text}"
 
 Please respond with:
@@ -123,7 +120,7 @@ Confidence: [number]
 Reasoning: [explanation]
 Reflection: [empathetic response]"""
         
-        response = gen_model.generate_content(prompt)
+        response = client.models.generate_content(model="gemini-2.0-flash", contents=prompt)
         ai_analysis = response.text
         
         # Parse AI response
@@ -196,4 +193,3 @@ def predict_sentiment_enhanced(input: EnhancedTextInput):
         # Fall back to original method
         return predict_sentiment(TextInput(text=text))
 
-print(os.getenv("GEMINI_API_KEY")[:12])
