@@ -5,7 +5,7 @@ import google.generativeai as genai
 import os
 from dotenv import load_dotenv
 
-load_dotenv()  # loads .env locally; no-op when env vars are already set (e.g. Render)
+load_dotenv(override=True)  # .env values override any existing system env vars
 
 # Configure Gemini API
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
