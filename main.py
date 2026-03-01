@@ -54,7 +54,7 @@ Please provide a brief, empathetic response (2-3 sentences) that:
 - Avoids mentioning the sentiment analysis directly
 
 Focus on being genuinely helpful and supportive. And if they are doing well, make sure to celebrate that! Also make sure to speak as if you're talking directly to the person like a friend."""
-        response = client.models.generate_content(model="gemini-2.0-flash", contents=prompt)
+        response = client.models.generate_content(model="gemini-2.5-flash", contents=prompt)
         thought = response.text
     except Exception as e:
         thought = f"Could not generate reflection: {str(e)}"
@@ -79,7 +79,7 @@ Sentiment: [sentiment]
 Confidence: [number]
 Reasoning: [explanation]"""
         
-        response = client.models.generate_content(model="gemini-2.0-flash", contents=prompt)
+        response = client.models.generate_content(model="gemini-2.5-flash", contents=prompt)
         ai_analysis = response.text
         
         # Parse AI response
@@ -120,7 +120,7 @@ Confidence: [number]
 Reasoning: [explanation]
 Reflection: [empathetic response]"""
         
-        response = client.models.generate_content(model="gemini-2.0-flash", contents=prompt)
+        response = client.models.generate_content(model="gemini-2.5-flash", contents=prompt)
         ai_analysis = response.text
         
         # Parse AI response
